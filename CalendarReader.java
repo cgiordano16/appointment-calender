@@ -6,18 +6,9 @@ import java.io.FileNotFoundException;
 
 public class CalendarReader{
     public static void main(String[] args) throws FileNotFoundException{
-        Scanner file_scanner = new Scanner(new File("Calendar.txt"));
-        while (file_scanner.hasNextLine()){
-            String line = file_scanner.nextLine();
-            line = line.replaceAll("\\s", "");
-            System.out.println(line);
-            Scanner line_scanner = new Scanner(line);
-            line_scanner.useDelimiter("/|,|-|:|[MTHWF]");
-            while(line_scanner.hasNext()){
-                System.out.println(line_scanner.next());
-            }
-            line_scanner.close();
-        }
-        file_scanner.close();
-    }
+        TimeSlot new_timeslot = new TimeSlot(1400, 1500);
+        Date new_date = new Date(4, 28);
+        new_date.addTimeSlot(new_timeslot);
+        System.out.println(new_date);
+    }    
 }
