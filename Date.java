@@ -17,7 +17,7 @@ public class Date{
 
     @Override
     public String toString(){
-        return time_slots.toString();
+        return month + "/" + day + "\n" + time_slots.toString();
     }
 
 } 
