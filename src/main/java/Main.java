@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import com.google.gson.*;
 
 
-public class CalendarReader{
+public class Main{
     public static void main(String[] args) throws FileNotFoundException{
         //test code for Date structure
         TimeSlot new_timeslot = new TimeSlot(1400, 1500);
