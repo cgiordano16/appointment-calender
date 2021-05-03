@@ -47,6 +47,7 @@ public class Main{
 
         reader.close();
 
+        json_input.removeIf(String::isEmpty);
         List<Date> calendar_input = new ArrayList<>();
 
         for(String date_json : json_input){
