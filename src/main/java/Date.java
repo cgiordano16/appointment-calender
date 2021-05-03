@@ -1,11 +1,10 @@
-import java.util.List;
-import java.util.ArrayList;
+import java.util.TreeSet;
 
 public class Date implements Comparable<Date>{
     private int month;
     private int day;
     private int year;
-    List<TimeSlot> time_slots = new ArrayList<>();
+    TreeSet<TimeSlot> time_slots = new TreeSet<>();
 
     Date(int month, int day, int year){
         this.month = month;
@@ -15,6 +14,10 @@ public class Date implements Comparable<Date>{
 
     public void addTimeSlot(TimeSlot new_slot){
         this.time_slots.add(new_slot);
+    }
+
+    public void removeTimeSlot(TimeSlot slot){
+        this.time_slots.remove(slot);
     }
 
     @Override

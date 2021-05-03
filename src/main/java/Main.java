@@ -1,22 +1,23 @@
 import java.io.*;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
 import com.google.gson.*;
 
 
 public class Main{
     public static void main(String[] args) throws IOException, ClassNotFoundException{
         //test code for Date structure
-        TimeSlot new_timeslot = new TimeSlot(1400, 1500);
-        TimeSlot new_timeslot2 = new TimeSlot(1600, 1700);
-        
         Date new_date = new Date(4, 28, 2021);
         Date new_date2 = new Date(4, 29, 2021);
         
-        new_date2.addTimeSlot(new_timeslot);
-        new_date2.addTimeSlot(new_timeslot2);
+        new_date2.addTimeSlot(new TimeSlot(1400, 1500));
+        new_date2.addTimeSlot(new TimeSlot(1600, 1700));
         
-        new_date.addTimeSlot(new_timeslot);
-        new_date.addTimeSlot(new_timeslot2);
+        new_date.addTimeSlot(new TimeSlot(1400, 1500));
+        new_date.addTimeSlot(new TimeSlot(1600, 1700));
+        new_date.addTimeSlot(new TimeSlot(1700, 1730));
+        new_date.addTimeSlot(new TimeSlot(1200, 1230));
          
         List<Date> calendar_output = new ArrayList<>(); 
         calendar_output.add(new_date2);
@@ -27,7 +28,7 @@ public class Main{
             System.out.println(date);
         }
 
-        //write list of dates to json file
+        //write list of dates to json file, one date per line
         final Gson gson = new Gson();
         BufferedWriter writer = new BufferedWriter(new FileWriter("json_objects.json"));
         for (Date date : calendar_output){
@@ -36,27 +37,30 @@ public class Main{
         }        
         writer.close();
 
-        //Read File back
+        //Read File back as a list of lines
         List<String> json_input = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new FileReader("calendar.json"));
         
-        String line;
+        String line; 
         while ((line = reader.readLine()) != null) {
           json_input.add(line);
         }
 
         reader.close();
-
+        //remove any empty lines that were read
         json_input.removeIf(String::isEmpty);
+        
+        //convert list of jsons to list of date objects 
         List<Date> calendar_input = new ArrayList<>();
-
         for(String date_json : json_input){
             calendar_input.add(gson.fromJson(date_json, Date.class));
         }
 
+        //sort new calendar in case date entries were out of order in json file
         Collections.sort(calendar_input);
 
-        for(Date date : calendar_input){
+        //confirm file was read correctly by printing each date
+        for(Date date : calendar_input){  
             System.out.println(date);
         }
 
