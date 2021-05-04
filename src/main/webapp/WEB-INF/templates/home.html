@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+
+  <head>
+    <title>Appointment Calendar</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
+  </head>
+
+  <body>
+  
+    <p th:utext="#{home.welcome}">Appointment Calendar for Chris G!</p>
+  
+    <p>
+      Today is: <span th:with="df=#{date.format}" th:text="${#calendars.format(today,df)}">13 February 2011</span>
+    </p>
+  
+    <table>
+      <tr>
+        <td>Sunday</td>
+        <td>Monday</td>
+        <td>Tuesday</td>
+        <td>Wednesday</td>
+        <td>Thursday</td>
+        <td>Friday</td>
+        <td>Saturday</td>
+      </tr>
+      <tr>
+        <td th:each="day : ${week1}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+      </tr>
+      <tr>
+        <td th:each="day : ${week2}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+      </tr>
+      <tr>
+        <td th:each="day : ${week3}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+      </tr>
+      <tr>
+        <td th:each="day : ${week4}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+      </tr>
+      <tr>
+        <td th:each="day : ${week5}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+      </tr>
+      <tr>
+        <td th:each="day : ${week6}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+      </tr>
+    </table>
+  </body>
+  
+</html>
+
