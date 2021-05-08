@@ -1,3 +1,5 @@
+package web.application;
+
 public class TimeSlot implements Comparable<TimeSlot>{
     private int start; //start time in military time 
     private int end;   //end time in military time
@@ -9,6 +11,18 @@ public class TimeSlot implements Comparable<TimeSlot>{
         this.end = end;
         this.taken = false;
         this.student = "";
+    }
+
+    public int getEnd() {
+        return end;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public String getStudent() {
+        return student;
     }
 
     public void setTaken(String student_name, boolean taken){

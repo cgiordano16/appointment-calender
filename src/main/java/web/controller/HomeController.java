@@ -5,6 +5,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.TreeSet;
+import java.io.*;
+import web.application.JsonCalendarDate;
+import web.application.TimeSlot;
+import com.google.gson.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +31,10 @@ public class HomeController implements IGTVGController {
             final ServletContext servletContext, final ITemplateEngine templateEngine)
             throws Exception {
         
+        List<JsonCalendarDate> inputDates = getCalendarDates();
+        System.out.println(inputDates);
         CalendarMonth month = new CalendarMonth(5);
+        updateMonth(month, inputDates);
         WebContext ctx = new WebContext(request, response, servletContext, request.getLocale());
         ctx.setVariable("today", Calendar.getInstance());
         ctx.setVariable("week1", month.getWeek1());
@@ -42,21 +50,42 @@ public class HomeController implements IGTVGController {
         
     }
 
-    public static List<String> getDates(int beginDay, int lastDay) {
-        LocalDate today = LocalDate.now();
-        List<String> days = new ArrayList<>();
-        int currentMonth = today.getMonthValue();
-        LocalDate beginDate = LocalDate.of(today.getYear(), currentMonth, beginDay);
-        if (beginDate.getDayOfWeek() == DayOfWeek.THURSDAY) {
-            days.add(" ");
-            days.add(" ");
-            days.add(" ");
-            days.add(" ");
+     private static List<JsonCalendarDate> getCalendarDates() throws FileNotFoundException, IOException{
+        final Gson gson = new Gson();
+        List<String> json_input = new ArrayList<>();
+        BufferedReader reader = new BufferedReader(new FileReader("calendar.json"));
+        
+        String line; 
+        while ((line = reader.readLine()) != null) {
+          json_input.add(line);
         }
-        for (int i = beginDay; i <= lastDay; i++) {
-            LocalDate day = LocalDate.of(today.getYear(), currentMonth, i);
-            days.add(String.format("%s", day.getDayOfMonth()));
+
+        reader.close();
+        //remove any empty lines that were read
+        json_input.removeIf(String::isEmpty);
+        
+        //convert list of jsons to list of date objects 
+        List<JsonCalendarDate> calendar_input = new ArrayList<>();
+        for(String date_json : json_input){
+            calendar_input.add(gson.fromJson(date_json, JsonCalendarDate.class));
         }
-        return days;
-    }
+        return calendar_input;
+     }
+
+     private static void updateMonth(CalendarMonth month, List<JsonCalendarDate> dates) {
+        for (JsonCalendarDate inputDate : dates) {
+            int year = inputDate.getYear();
+            int monthValue = inputDate.getMonth();
+            int day = inputDate.getDay();
+            TreeSet<TimeSlot> slots = inputDate.getTimeSlots();
+            for (TimeSlot slot : slots) {
+                String inputText = slot.getStudent();
+                int startHour = (int) slot.getStart()/100;
+                int startMinute = (int) slot.getStart()%100;
+                int endHour = (int) slot.getEnd()/100;
+                int endMinute = (int) slot.getEnd()%100;
+                month.addAppointmentDate(inputText, year, monthValue, day, startHour, startMinute);
+            }
+        }
+     }
 }

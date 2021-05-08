@@ -1,15 +1,33 @@
+package web.application;
+
 import java.util.TreeSet;
 
-public class Date implements Comparable<Date>{
+public class JsonCalendarDate implements Comparable<JsonCalendarDate>{
     private int month;
     private int day;
     private int year;
     TreeSet<TimeSlot> time_slots = new TreeSet<>();
 
-    Date(int month, int day, int year){
+    JsonCalendarDate(int month, int day, int year){
         this.month = month;
         this.day = day;
         this.year = year;
+    }
+
+    public TreeSet<TimeSlot> getTimeSlots() {
+        return time_slots;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public int getDay() {
+        return day;
     }
 
     public void addTimeSlot(TimeSlot new_slot){
@@ -21,7 +39,7 @@ public class Date implements Comparable<Date>{
     }
 
     @Override
-    public int compareTo(Date o){
+    public int compareTo(JsonCalendarDate o){
         if(this.year != o.year){
             return this.year - o.year;
         }

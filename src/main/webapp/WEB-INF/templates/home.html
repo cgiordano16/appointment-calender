@@ -27,25 +27,91 @@
         <td>Saturday</td>
       </tr>
       <tr>
-        <td th:each="day : ${week1}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+        <td th:each="day : ${week1}">
+          <span th:text="${day.displayDate}"></span>
+          <span th:each="appt : ${day.appointList}">
+            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+              <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+            <div class="form-popup" id=${appt.startingTime}>
+              <form action="/action_page.php" class="form-container">
+                <h1>Reserve?</h1>
+            
+                <label for="name"><b>Name:</b></label>
+                <input type="text" placeholder="Enter Name" name="name" required>
+            
+                <button type="submit" class="btn">Login</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|'closeForm(${appt.startingTime})'">Close</button>
+              </form>
+            </div>
+          </span>
+        </td>
       </tr>
       <tr>
-        <td th:each="day : ${week2}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+        <td th:each="day : ${week2}">
+          <span th:text="${day.displayDate}"></span>
+          <span th:each="appt : ${day.appointList}">
+            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+              <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+          </span>
+        </td>
       </tr>
       <tr>
-        <td th:each="day : ${week3}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+        <td th:each="day : ${week3}">
+          <span th:text="${day.displayDate}"></span>
+          <span th:each="appt : ${day.appointList}">
+            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+              <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+          </span>
+        </td>
       </tr>
       <tr>
-        <td th:each="day : ${week4}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+        <td th:each="day : ${week4}">
+          <span th:text="${day.displayDate}"></span>
+          <span th:each="appt : ${day.appointList}">
+            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+              <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+          </span>
+        </td>
       </tr>
       <tr>
-        <td th:each="day : ${week5}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+        <td th:each="day : ${week5}">
+          <span th:text="${day.displayDate}"></span>
+          <span th:each="appt : ${day.appointList}">
+            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+              <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+          </span>
+        </td>
       </tr>
       <tr>
-        <td th:each="day : ${week6}"><span th:text="${day.displayDate}"></span><span th:each="appt : ${day.appointList}"><div style="border:solid 2px black;"><span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span></div></span></td>
+        <td th:each="day : ${week6}">
+          <span th:text="${day.displayDate}"></span>
+          <span th:each="appt : ${day.appointList}">
+            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+              <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+          </span>
+        </td>
       </tr>
     </table>
   </body>
   
-</html>
+  <script type="text/javascript">
+    function showStatus(status) {
+      if (status === "Available Slot") {
+        alert('You have reserved the slot!');
+      } else {
+        alert('This slot has been taken...');
+      }
+    }
 
+    function closeForm() {
+
+    }
+  </script>
+
+</html>
