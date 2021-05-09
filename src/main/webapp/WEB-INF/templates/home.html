@@ -6,6 +6,78 @@
     <title>Appointment Calendar</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" media="all" href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
+    <style>
+      body {font-family: Arial, Helvetica, sans-serif;}
+      * {box-sizing: border-box;}
+      
+      /* Button used to open the contact form - fixed at the bottom of the page */
+      .open-button {
+        background-color: #555;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        opacity: 0.8;
+        position: fixed;
+        bottom: 23px;
+        right: 28px;
+        width: 280px;
+      }
+      
+      /* The popup form - hidden by default */
+      .form-popup {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        right: 15px;
+        border: 3px solid #f1f1f1;
+        z-index: 9;
+      }
+      
+      /* Add styles to the form container */
+      .form-container {
+        max-width: 300px;
+        padding: 10px;
+        background-color: white;
+      }
+      
+      /* Full-width input fields */
+      .form-container input[type=text], .form-container input[type=password] {
+        width: 100%;
+        padding: 15px;
+        margin: 5px 0 22px 0;
+        border: none;
+        background: #f1f1f1;
+      }
+      
+      /* When the inputs get focus, do something */
+      .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+        background-color: #ddd;
+        outline: none;
+      }
+      
+      /* Set a style for the submit/login button */
+      .form-container .btn {
+        background-color: #04AA6D;
+        color: white;
+        padding: 16px 20px;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom:10px;
+        opacity: 0.8;
+      }
+      
+      /* Add a red background color to the cancel button */
+      .form-container .cancel {
+        background-color: red;
+      }
+      
+      /* Add some hover effects to buttons */
+      .form-container .btn:hover, .open-button:hover {
+        opacity: 1;
+      }
+    </style>
   </head>
 
   <body>
@@ -30,18 +102,18 @@
         <td th:each="day : ${week1}">
           <span th:text="${day.displayDate}"></span>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
             </div>
-            <div class="form-popup" id=${appt.startingTime}>
-              <form action="/action_page.php" class="form-container">
+            <div class="form-popup" th:attr="id=|${appt.startingTime}|">
+              <form class="form-container">
                 <h1>Reserve?</h1>
             
                 <label for="name"><b>Name:</b></label>
-                <input type="text" placeholder="Enter Name" name="name" required>
+                <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
             
-                <button type="submit" class="btn">Login</button>
-                <button type="button" class="btn cancel" th:attr="onclick=|'closeForm(${appt.startingTime})'">Close</button>
+                <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
               </form>
             </div>
           </span>
@@ -51,8 +123,19 @@
         <td th:each="day : ${week2}">
           <span th:text="${day.displayDate}"></span>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+            <div class="form-popup" th:attr="id=|${appt.startingTime}|">
+              <form class="form-container">
+                <h1>Reserve?</h1>
+            
+                <label for="name"><b>Name:</b></label>
+                <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+              </form>
             </div>
           </span>
         </td>
@@ -61,8 +144,19 @@
         <td th:each="day : ${week3}">
           <span th:text="${day.displayDate}"></span>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+            <div class="form-popup" th:attr="id=|${appt.startingTime}|">
+              <form class="form-container">
+                <h1>Reserve?</h1>
+            
+                <label for="name"><b>Name:</b></label>
+                <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+              </form>
             </div>
           </span>
         </td>
@@ -71,8 +165,19 @@
         <td th:each="day : ${week4}">
           <span th:text="${day.displayDate}"></span>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+            <div class="form-popup" th:attr="id=|${appt.startingTime}|">
+              <form class="form-container">
+                <h1>Reserve?</h1>
+            
+                <label for="name"><b>Name:</b></label>
+                <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+              </form>
             </div>
           </span>
         </td>
@@ -81,8 +186,19 @@
         <td th:each="day : ${week5}">
           <span th:text="${day.displayDate}"></span>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+            <div class="form-popup" th:attr="id=|${appt.startingTime}|">
+              <form class="form-container">
+                <h1>Reserve?</h1>
+            
+                <label for="name"><b>Name:</b></label>
+                <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+              </form>
             </div>
           </span>
         </td>
@@ -91,8 +207,19 @@
         <td th:each="day : ${week6}">
           <span th:text="${day.displayDate}"></span>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.displayText}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
+            </div>
+            <div class="form-popup" th:attr="id=|${appt.startingTime}|">
+              <form class="form-container">
+                <h1>Reserve?</h1>
+            
+                <label for="name"><b>Name:</b></label>
+                <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+              </form>
             </div>
           </span>
         </td>
@@ -102,15 +229,18 @@
   
   <script type="text/javascript">
     function showStatus(status) {
-      if (status === "Available Slot") {
-        alert('You have reserved the slot!');
-      } else {
-        alert('This slot has been taken...');
-      }
+      document.getElementById(status).style.display = "block";
     }
 
-    function closeForm() {
+    function closeForm(status) {
+      document.getElementById(status).style.display = "none";
+    }
 
+    function takeTimeSlot(ts) {
+      console.log(ts);
+      let tsName = document.getElementById(ts + '-name').value;
+      let url = 'http://localhost:8080/appointmentCalendar?action=update&name=' + tsName + '&ts=' + ts;
+      window.location.href = url;
     }
   </script>
 
