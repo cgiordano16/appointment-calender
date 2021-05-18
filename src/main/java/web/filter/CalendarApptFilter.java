@@ -13,18 +13,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.thymeleaf.ITemplateEngine;
-import web.application.GTVGApplication;
-import web.controller.IGTVGController;
+import web.application.CalendarApptApplication;
+import web.controller.ICalendarApptController;
 
 
-public class GTVGFilter implements Filter {
+public class CalendarApptFilter implements Filter {
 
     
     private ServletContext servletContext;
-    private GTVGApplication application;
+    private CalendarApptApplication application;
     
     
-    public GTVGFilter() {
+    public CalendarApptFilter() {
         super();
     }
 
@@ -32,7 +32,7 @@ public class GTVGFilter implements Filter {
 
     public void init(final FilterConfig filterConfig) throws ServletException {
         this.servletContext = filterConfig.getServletContext();
-        this.application = new GTVGApplication(this.servletContext);
+        this.application = new CalendarApptApplication(this.servletContext);
     }
 
 
@@ -73,7 +73,7 @@ public class GTVGFilter implements Filter {
              * that will process the request. If no controller is available,
              * return false and let other filters/servlets process the request.
              */
-            IGTVGController controller = this.application.resolveControllerForRequest(request);
+            ICalendarApptController controller = this.application.resolveControllerForRequest(request);
             if (controller == null) {
                 return false;
             }

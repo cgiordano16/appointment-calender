@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.thymeleaf.ITemplateEngine;
 
-public interface IGTVGController {
+public interface ICalendarApptController {
 
     
     public void process(

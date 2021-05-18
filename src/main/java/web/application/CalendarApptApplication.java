@@ -11,17 +11,17 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import web.controller.HomeController;
-import web.controller.IGTVGController;
+import web.controller.ICalendarApptController;
 
-public class GTVGApplication {
+public class CalendarApptApplication {
 
 
     private TemplateEngine templateEngine;
-    private Map<String, IGTVGController> controllersByURL;
+    private Map<String, ICalendarApptController> controllersByURL;
 
     
     
-    public GTVGApplication(final ServletContext servletContext) {
+    public CalendarApptApplication(final ServletContext servletContext) {
 
         super();
 
@@ -42,13 +42,13 @@ public class GTVGApplication {
         this.templateEngine = new TemplateEngine();
         this.templateEngine.setTemplateResolver(templateResolver);
 
-        this.controllersByURL = new HashMap<String, IGTVGController>();
+        this.controllersByURL = new HashMap<String, ICalendarApptController>();
         this.controllersByURL.put("/", new HomeController());
 
     }
 
     
-    public IGTVGController resolveControllerForRequest(final HttpServletRequest request) {
+    public ICalendarApptController resolveControllerForRequest(final HttpServletRequest request) {
         final String path = getRequestPath(request);
         return this.controllersByURL.get(path);
     }

@@ -5,7 +5,7 @@
   <head>
     <title>Appointment Calendar</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" media="all" href="../../css/gtvg.css" th:href="@{/css/gtvg.css}" />
+    <link rel="stylesheet" type="text/css" media="all" href="../../css/appt.css" th:href="@{/css/appt.css}" />
     <style>
       body {font-family: Arial, Helvetica, sans-serif;}
       * {box-sizing: border-box;}
@@ -77,6 +77,15 @@
       .form-container .btn:hover, .open-button:hover {
         opacity: 1;
       }
+
+      .openDay {
+        border: 2px solid black;
+        background-color: lightgrey;
+        border-radius: 25%;
+        float: right;
+        width: 25%;
+        text-align: center;
+      }
     </style>
   </head>
 
@@ -85,10 +94,15 @@
     <p th:utext="#{home.welcome}">Appointment Calendar for Chris G!</p>
   
     <p>
-      Today is: <span th:with="df=#{date.format}" th:text="${#calendars.format(today,df)}">13 February 2011</span>
+      Today is: <span th:with="df=#{date.format}" th:text="${#calendars.format(today,df)}"></span>
     </p>
   
     <table>
+      <tr>
+      	<td style="text-align: left;"><button type="button" th:attr="onclick=|showPrevMonth(${session.cm})|">&lt;</button></td>
+      	<td colspan="5" th:text="${session.cmd}" style="text-align: center;font-size: large;"></td>
+      	<td style="text-align: right;"><button type="button" th:attr="onclick=|showNextMonth(${session.cm})|">&gt;</button></td>
+      </tr>
       <tr>
         <td>Sunday</td>
         <td>Monday</td>
@@ -100,9 +114,32 @@
       </tr>
       <tr>
         <td th:each="day : ${week1}">
-          <span th:text="${day.displayDate}"></span>
+          <div style="padding-bottom: 5%;">
+            <span th:text="${day.displayDate}"></span>
+            <span th:attr="onclick=|openScheduleAppt('${day.calendarDate}')|" th:text="${day.calendarDate}? '+'" th:class="${day.calendarDate}? 'openDay'"></span>
+            <div class="form-popup" th:attr="id=|${day.calendarDate}|">
+              <form class="form-container">
+                <h1>Create new appointment?</h1>
+            
+                <label for="startHour"><b>Start Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting starts" name="startHour" th:attr="id=|${day.calendarDate}-startHour|" required>
+  
+                <label for="startMinute"><b>Start Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting starts" name="startMinute" th:attr="id=|${day.calendarDate}-startMinute|" required>
+  
+                <label for="endHour"><b>End Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting ends" name="endHour" th:attr="id=|${day.calendarDate}-endHour|" required>
+  
+                <label for="endMinute"><b>End Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting ends" name="endMinute" th:attr="id=|${day.calendarDate}-endMinute|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|makeNewAppointment('${day.calendarDate}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeScheduleAppt('${day.calendarDate}')|">Close</button>
+              </form>
+            </div>
+          </div>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|openReserveForm('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
             </div>
             <div class="form-popup" th:attr="id=|${appt.startingTime}|">
@@ -113,7 +150,7 @@
                 <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
             
                 <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
-                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeReserveForm('${appt.startingTime}')|">Close</button>
               </form>
             </div>
           </span>
@@ -121,9 +158,32 @@
       </tr>
       <tr>
         <td th:each="day : ${week2}">
-          <span th:text="${day.displayDate}"></span>
+          <div style="padding-bottom: 5%;">
+            <span th:text="${day.displayDate}"></span>
+            <span th:attr="onclick=|openScheduleAppt('${day.calendarDate}')|" th:text="${day.calendarDate}? '+'" th:class="${day.calendarDate}? 'openDay'"></span>
+            <div class="form-popup" th:attr="id=|${day.calendarDate}|">
+              <form class="form-container">
+                <h1>Create new appointment?</h1>
+            
+                <label for="startHour"><b>Start Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting starts" name="startHour" th:attr="id=|${day.calendarDate}-startHour|" required>
+  
+                <label for="startMinute"><b>Start Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting starts" name="startMinute" th:attr="id=|${day.calendarDate}-startMinute|" required>
+  
+                <label for="endHour"><b>End Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting ends" name="endHour" th:attr="id=|${day.calendarDate}-endHour|" required>
+  
+                <label for="endMinute"><b>End Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting ends" name="endMinute" th:attr="id=|${day.calendarDate}-endMinute|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|makeNewAppointment('${day.calendarDate}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeScheduleAppt('${day.calendarDate}')|">Close</button>
+              </form>
+            </div>
+          </div>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|openReserveForm('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
             </div>
             <div class="form-popup" th:attr="id=|${appt.startingTime}|">
@@ -134,7 +194,7 @@
                 <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
             
                 <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
-                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeReserveForm('${appt.startingTime}')|">Close</button>
               </form>
             </div>
           </span>
@@ -142,9 +202,32 @@
       </tr>
       <tr>
         <td th:each="day : ${week3}">
-          <span th:text="${day.displayDate}"></span>
+          <div style="padding-bottom: 5%;">
+            <span th:text="${day.displayDate}"></span>
+            <span th:attr="onclick=|openScheduleAppt('${day.calendarDate}')|" th:text="${day.calendarDate}? '+'" th:class="${day.calendarDate}? 'openDay'"></span>
+            <div class="form-popup" th:attr="id=|${day.calendarDate}|">
+              <form class="form-container">
+                <h1>Create new appointment?</h1>
+            
+                <label for="startHour"><b>Start Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting starts" name="startHour" th:attr="id=|${day.calendarDate}-startHour|" required>
+  
+                <label for="startMinute"><b>Start Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting starts" name="startMinute" th:attr="id=|${day.calendarDate}-startMinute|" required>
+  
+                <label for="endHour"><b>End Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting ends" name="endHour" th:attr="id=|${day.calendarDate}-endHour|" required>
+  
+                <label for="endMinute"><b>End Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting ends" name="endMinute" th:attr="id=|${day.calendarDate}-endMinute|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|makeNewAppointment('${day.calendarDate}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeScheduleAppt('${day.calendarDate}')|">Close</button>
+              </form>
+            </div>
+          </div>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|openReserveForm('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
             </div>
             <div class="form-popup" th:attr="id=|${appt.startingTime}|">
@@ -155,7 +238,7 @@
                 <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
             
                 <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
-                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeReserveForm('${appt.startingTime}')|">Close</button>
               </form>
             </div>
           </span>
@@ -163,9 +246,32 @@
       </tr>
       <tr>
         <td th:each="day : ${week4}">
-          <span th:text="${day.displayDate}"></span>
+          <div style="padding-bottom: 5%;">
+            <span th:text="${day.displayDate}"></span>
+            <span th:attr="onclick=|openScheduleAppt('${day.calendarDate}')|" th:text="${day.calendarDate}? '+'" th:class="${day.calendarDate}? 'openDay'"></span>
+            <div class="form-popup" th:attr="id=|${day.calendarDate}|">
+              <form class="form-container">
+                <h1>Create new appointment?</h1>
+            
+                <label for="startHour"><b>Start Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting starts" name="startHour" th:attr="id=|${day.calendarDate}-startHour|" required>
+  
+                <label for="startMinute"><b>Start Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting starts" name="startMinute" th:attr="id=|${day.calendarDate}-startMinute|" required>
+  
+                <label for="endHour"><b>End Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting ends" name="endHour" th:attr="id=|${day.calendarDate}-endHour|" required>
+  
+                <label for="endMinute"><b>End Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting ends" name="endMinute" th:attr="id=|${day.calendarDate}-endMinute|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|makeNewAppointment('${day.calendarDate}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeScheduleAppt('${day.calendarDate}')|">Close</button>
+              </form>
+            </div>
+          </div>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|openReserveForm('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
             </div>
             <div class="form-popup" th:attr="id=|${appt.startingTime}|">
@@ -176,7 +282,7 @@
                 <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
             
                 <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
-                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeReserveForm('${appt.startingTime}')|">Close</button>
               </form>
             </div>
           </span>
@@ -184,9 +290,32 @@
       </tr>
       <tr>
         <td th:each="day : ${week5}">
-          <span th:text="${day.displayDate}"></span>
+          <div style="padding-bottom: 5%;">
+            <span th:text="${day.displayDate}"></span>
+            <span th:attr="onclick=|openScheduleAppt('${day.calendarDate}')|" th:text="${day.calendarDate}? '+'" th:class="${day.calendarDate}? 'openDay'"></span>
+            <div class="form-popup" th:attr="id=|${day.calendarDate}|">
+              <form class="form-container">
+                <h1>Create new appointment?</h1>
+            
+                <label for="startHour"><b>Start Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting starts" name="startHour" th:attr="id=|${day.calendarDate}-startHour|" required>
+  
+                <label for="startMinute"><b>Start Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting starts" name="startMinute" th:attr="id=|${day.calendarDate}-startMinute|" required>
+  
+                <label for="endHour"><b>End Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting ends" name="endHour" th:attr="id=|${day.calendarDate}-endHour|" required>
+  
+                <label for="endMinute"><b>End Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting ends" name="endMinute" th:attr="id=|${day.calendarDate}-endMinute|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|makeNewAppointment('${day.calendarDate}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeScheduleAppt('${day.calendarDate}')|">Close</button>
+              </form>
+            </div>
+          </div>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|openReserveForm('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
             </div>
             <div class="form-popup" th:attr="id=|${appt.startingTime}|">
@@ -197,7 +326,7 @@
                 <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
             
                 <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
-                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeReserveForm('${appt.startingTime}')|">Close</button>
               </form>
             </div>
           </span>
@@ -205,9 +334,32 @@
       </tr>
       <tr>
         <td th:each="day : ${week6}">
-          <span th:text="${day.displayDate}"></span>
+          <div style="padding-bottom: 5%;">
+            <span th:text="${day.displayDate}"></span>
+            <span th:attr="onclick=|openScheduleAppt('${day.calendarDate}')|" th:text="${day.calendarDate}? '+'" th:class="${day.calendarDate}? 'openDay'"></span>
+            <div class="form-popup" th:attr="id=|${day.calendarDate}|">
+              <form class="form-container">
+                <h1>Create new appointment?</h1>
+            
+                <label for="startHour"><b>Start Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting starts" name="startHour" th:attr="id=|${day.calendarDate}-startHour|" required>
+  
+                <label for="startMinute"><b>Start Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting starts" name="startMinute" th:attr="id=|${day.calendarDate}-startMinute|" required>
+  
+                <label for="endHour"><b>End Time Hour:</b></label>
+                <input type="number" placeholder="Enter hour that the meeting ends" name="endHour" th:attr="id=|${day.calendarDate}-endHour|" required>
+  
+                <label for="endMinute"><b>End Time Minute:</b></label>
+                <input type="number" placeholder="Enter minute that the meeting ends" name="endMinute" th:attr="id=|${day.calendarDate}-endMinute|" required>
+            
+                <button type="button" class="btn" th:attr="onclick=|makeNewAppointment('${day.calendarDate}')|">Submit</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeScheduleAppt('${day.calendarDate}')|">Close</button>
+              </form>
+            </div>
+          </div>
           <span th:each="appt : ${day.appointList}">
-            <div th:attr="onclick=|showStatus('${appt.startingTime}')|" style="border:solid 2px black;">
+            <div th:attr="onclick=|openReserveForm('${appt.startingTime}')|" style="border:solid 2px black;">
               <span th:text="${appt.startingTimeFormatted}"></span> <span th:text="${appt.displayText}"></span>
             </div>
             <div class="form-popup" th:attr="id=|${appt.startingTime}|">
@@ -218,7 +370,7 @@
                 <input type="text" placeholder="Enter Name" name="name" th:attr="id=|${appt.startingTime}-name|" required>
             
                 <button type="button" class="btn" th:attr="onclick=|takeTimeSlot('${appt.startingTime}')|">Submit</button>
-                <button type="button" class="btn cancel" th:attr="onclick=|closeForm('${appt.startingTime}')|">Close</button>
+                <button type="button" class="btn cancel" th:attr="onclick=|closeReserveForm('${appt.startingTime}')|">Close</button>
               </form>
             </div>
           </span>
@@ -228,18 +380,57 @@
   </body>
   
   <script type="text/javascript">
-    function showStatus(status) {
+    function openReserveForm(status) {
       document.getElementById(status).style.display = "block";
     }
 
-    function closeForm(status) {
+    function closeReserveForm(status) {
       document.getElementById(status).style.display = "none";
+    }
+
+    function openScheduleAppt(status) {
+      document.getElementById(status).style.display = "block";
+    }
+
+    function closeScheduleAppt(status) {
+      document.getElementById(status).style.display = "none";
+    }
+
+    function showNextMonth(cm) {
+      if (cm < 1 || cm > 11) {
+        alert('Only Current Year handled.');
+        return;
+      }
+      let newMonth = cm + 1;
+      let url = 'http://localhost:8080/appointmentCalendar?action=updateMonth&newMonth=' + newMonth;
+      window.location.href = url;
+    }
+
+    function showPrevMonth(cm) {
+      if (cm < 2 || cm > 12) {
+        alert('Only Current Year handled.');
+        return
+      }
+      let newMonth = cm - 1;
+      let url = 'http://localhost:8080/appointmentCalendar?action=updateMonth&newMonth=' + newMonth;
+      window.location.href = url;
     }
 
     function takeTimeSlot(ts) {
       console.log(ts);
       let tsName = document.getElementById(ts + '-name').value;
       let url = 'http://localhost:8080/appointmentCalendar?action=update&name=' + tsName + '&ts=' + ts;
+      window.location.href = url;
+    }
+
+    function makeNewAppointment(calendarDate) {
+      console.log(calendarDate);
+      let startHour = document.getElementById(calendarDate + '-startHour').value;
+      let startMinute = document.getElementById(calendarDate + '-startMinute').value;
+      let endHour = document.getElementById(calendarDate + '-endHour').value;
+      let endMinute = document.getElementById(calendarDate + '-endMinute').value;
+      let url = 'http://localhost:8080/appointmentCalendar?action=build&sHour=' + startHour + '&sMinute=' + startMinute + '&eHour=' + endHour + '&eMinute=' + endMinute + '&apptDate=' + calendarDate;
+      console.log(url);
       window.location.href = url;
     }
   </script>

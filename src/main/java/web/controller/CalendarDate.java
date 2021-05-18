@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,17 +15,18 @@ public class CalendarDate {
 	private LocalDate calendarDate;
 	private String displayDate;
 	
-	private int startingHour = 14;
-	private int startingMinute = 00;
-	
-	private int endingHour = 17;
-	private int endingMinute = 00;
-	
-	private int lengthOfAppointment = 15;
+	public static final int lengthOfAppointment = 15;
 	
 	private Map<LocalDateTime, Appointment> appointmentMap;
+
+	public Map<LocalDateTime, Appointment> getAppointmentMap() {
+		return appointmentMap;
+	}
+
 	public List<Appointment> getAppointList() {
-		return new ArrayList<Appointment>(appointmentMap.values());
+		List<Appointment> apptList = new ArrayList<Appointment>(appointmentMap.values());
+		Collections.sort(apptList);
+		return apptList;
 	}
 	
 	public LocalDate getCalendarDate() {
@@ -48,29 +51,37 @@ public class CalendarDate {
 			displayDate = " ";
 		} else {
 			displayDate = String.format("%s", calendarDate.getDayOfMonth());
-			createAppointments();
+			// createAppointments();
 		}
 	}
 	
-	private void createAppointments() {
-	
-		LocalTime startingTime = LocalTime.of(startingHour, startingMinute);
-		LocalDateTime startingAppt = LocalDateTime.of(calendarDate, startingTime);
+	// public static String createAppointments(AppointmentDatabase appointmentDb, LocalDate calendarDate, int startHour, int startMinute, int endingHour, int endingMinute) {
+	// 	LocalTime startingTime = LocalTime.of(startHour, startMinute);
+	// 	LocalDateTime startingAppt = LocalDateTime.of(calendarDate, startingTime);
 		
-		// Skip Sat and Sun
-		if (startingAppt.getDayOfWeek() == DayOfWeek.SUNDAY || startingAppt.getDayOfWeek() == DayOfWeek.SATURDAY) {
-			return;
-		}
+	// 	// Skip Sat and Sun
+	// 	if (startingAppt.getDayOfWeek() == DayOfWeek.SUNDAY || startingAppt.getDayOfWeek() == DayOfWeek.SATURDAY) {
+	// 		return "";
+	// 	}
 		
-		LocalTime endingTime = LocalTime.of(endingHour, endingMinute);
-		LocalDateTime endingAppt = LocalDateTime.of(calendarDate, endingTime);
+	// 	LocalTime endingTime = LocalTime.of(endingHour, endingMinute);
+	// 	LocalDateTime endingAppt = LocalDateTime.of(calendarDate, endingTime);
 		
-		LocalDateTime apptTimeSlot = startingAppt;
-		while(apptTimeSlot.isBefore(endingAppt)) {
-			appointmentMap.put(apptTimeSlot, new Appointment("Available Slot", apptTimeSlot.getYear(), apptTimeSlot.getMonthValue(), apptTimeSlot.getDayOfMonth(), apptTimeSlot.getHour(), apptTimeSlot.getMinute()));			
-			apptTimeSlot = apptTimeSlot.plusMinutes(lengthOfAppointment);
-		}
-	}
+	// 	LocalDateTime apptTimeSlot = startingAppt;
+	// 	Appointment appt = appointmentDb.find(apptTimeSlot);
+	// 	LocalDateTime ldt = appt.getStartingTime();
+	// 	Map<LocalDateTime, Appointment> apptMap = ldt.getAppointmentMap();
+	// 	while(apptTimeSlot.isBefore(endingAppt)) {
+	// 		Appointment appt = new Appointment("<Available Slot>", apptTimeSlot.getYear(), apptTimeSlot.getMonthValue(), apptTimeSlot.getDayOfMonth(), apptTimeSlot.getHour(), apptTimeSlot.getMinute());
+	// 		String errorString = appointmentDb.update(apptTimeSlot, appt);
+	// 		if (!errorString.isEmpty()) {
+	// 			return errorString;
+	// 		}
+	// 		apptMap.put(apptTimeSlot, appt);
+	// 		apptTimeSlot = apptTimeSlot.plusMinutes(CalendarDate.lengthOfAppointment);
+	// 		return "";
+	// 	}
+	// }
 
 	public void addAppointment(Appointment appointment) {
 		if (calendarDate != null) {

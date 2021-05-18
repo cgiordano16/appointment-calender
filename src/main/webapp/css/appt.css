@@ -9,8 +9,8 @@ body {
   background-color: #ffffff;
   border: 1px solid #cccccc;
   margin: 0px auto; 
-  padding: 20px 20px; 
-  width: 850px;
+  padding: 20px 20px;
+  width: 75%;
 }
 
 h2 {
@@ -39,6 +39,7 @@ table > tbody > tr > td, table > thead > tr > th {
   border-left: 1px dotted #000000;
   vertical-align: top;
   line-height: 20px;
+  width: 14%;
 }
 
 table > tbody > tr, table > thead > tr {
